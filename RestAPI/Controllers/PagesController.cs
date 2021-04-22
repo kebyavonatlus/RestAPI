@@ -37,5 +37,55 @@ namespace RestAPI.Controllers
 
             return page;
         }
+
+        // PUT /api/page/1
+        [HttpPut("{id}")]
+        public async Task<ActionResult<Page>> PutPage(int id, Page page)
+        {
+            if (page == null)
+            {
+                return NotFound();
+            }
+
+            if (id != page.Id)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(page).State = EntityState.Modified;
+
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        // POST /api/page
+        [HttpPost]
+        public async Task<ActionResult<Page>> PostPage(Page page)
+        {
+            _context.Pages.Add(page);
+
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(PostPage), page);
+        }
+
+        // DELETE /api/page/1
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<Page>> DeletePage(int id)
+        {
+            var page = await _context.Pages.FindAsync(id);
+
+            if (page == null)
+            {
+                return NotFound();
+            }
+
+            _context.Pages.Remove(page);
+
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
     }
 }
